@@ -1,0 +1,15 @@
+/* App.css — version propre pour Exodus */
+
+#root {
+  min-height: 100vh;
+  margin: 0;
+  padding: 0; /* on gère le padding dans les pages */
+  text-align: left; /* IMPORTANT: ne pas centrer tout le contenu */
+}
+
+/* on neutralise les styles Vite inutiles */
+.logo,
+.read-the-docs,
+.card {
+  all: unset;
+}

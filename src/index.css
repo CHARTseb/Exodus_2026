@@ -1,0 +1,147 @@
+:root {
+  /* Palette marron / orangé pastel */
+  --bg: #f3eee7;
+  --card: #fffaf3;
+  --text: #1f2937;
+  --muted: rgba(31, 41, 55, 0.72);
+  --border: rgba(31, 41, 55, 0.15);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --radius: 18px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial,
+    "Apple Color Emoji", "Segoe UI Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+/* Titres : évite les espacements par défaut trop grands */
+h1,
+h2,
+h3 {
+  line-height: 1.2;
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+/* Sélection */
+::selection {
+  background: rgba(217, 119, 6, 0.22);
+}
+
+/* =========================================================
+   MARKDOWN (.md) : compact + listes correctes
+   ========================================================= */
+
+/* Paragraphes : petit écart entre \n\n (paragraphes) */
+.md p {
+  margin: 0 0 6px 0 !important; /* <-- espace entre paragraphes */
+  line-height: 1.1;
+}
+
+/* Pas d'espace après le dernier paragraphe */
+.md p:last-child {
+  margin-bottom: 0 !important;
+}
+
+/* Dans une liste, on ne veut pas que le <p> passe à la ligne */
+.md li > p {
+  display: inline !important;
+  margin: 0 !important;
+}
+
+
+/* Si une sous-liste suit un <p>, elle doit rester en bloc */
+.md li > p + ul,
+.md li > p + ol {
+  display: block !important;
+}
+
+/* Listes (base) */
+.md ul,
+.md ol {
+  margin: 0 !important;
+  padding-left: 22px !important; /* niveau 1 */
+  line-height: 1.1;
+}
+
+/* ✅ FIX BÉTON : si un reset CSS a mis li {display:block} / list-style:none */
+.md ul > li,
+.md ol > li {
+  display: list-item !important;
+  margin: 0 !important;
+  line-height: 1.1;
+  list-style-position: outside !important;
+}
+
+/* Puces / numéros */
+.md ul > li {
+  list-style-type: disc !important;
+}
+
+.md ul ul > li {
+  list-style-type: circle !important; /* sous-puces */
+}
+
+.md ol > li {
+  list-style-type: decimal !important;
+}
+
+/* ✅ Sous-listes : vraie tabulation (beaucoup plus à droite) */
+.md ul ul,
+.md ol ol,
+.md ul ol,
+.md ol ul {
+  padding-left: 38px !important; /* niveau 2 */
+  margin-top: 0 !important;
+}
+
+/* ✅ Réduit l'espace entre une puce principale et sa sous-liste */
+.md li > ul,
+.md li > ol {
+  margin-top: 0 !important;
+  padding-top: 0 !important;
+}
+
+/* Un poil d'air entre blocs markdown successifs (si tu veux 0, mets 0) */
+.md > * + * {
+  margin-top: 2px !important;
+}
+:root {
+  --fs-bible: 10.5pt;
+  --fs-body: 11pt;
+}
+
+/* Styles typographiques pour l'app */
+.bibleText {
+  font-size: var(--fs-bible);
+}
+
+.bodyText {
+  font-size: var(--fs-body);
+  font-family: Georgia, serif;
+}

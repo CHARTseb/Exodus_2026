@@ -11,13 +11,23 @@ export function Card(props: { title: string; children: React.ReactNode }) {
 
 const styles: Record<string, React.CSSProperties> = {
   card: {
-    background: "white",
-    borderRadius: 16,
+    background: "var(--card)",
+    color: "var(--text)",               // 👈 CRUCIAL
+    borderRadius: "var(--radius)",
     padding: 16,
-    boxShadow: "0 8px 24px rgba(0,0,0,.08)",
     marginBottom: 14,
-    border: "1px solid rgba(0,0,0,.06)"
+    border: "1px solid var(--border)",
+    boxShadow: "var(--shadow)",
   },
-  h2: { margin: 0, fontSize: 16 },
-  body: { marginTop: 10, lineHeight: 1.5, whiteSpace: "pre-wrap" }
+  h2: {
+    margin: 0,
+    fontSize: 16,
+    fontWeight: 800,
+    lineHeight: 1.2,
+  },
+  body: {
+    marginTop: 10,
+    lineHeight: 1.45,
+  },
 };
+

@@ -1,119 +1,228 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import Today from "./pages/Today";
 import AllDays from "./pages/AllDays";
 import DayDetail from "./pages/DayDetail";
+import "./App.css";
 
-type Tab = "today" | "all" | "detail";
+type Tab = "today" | "all";
+type ThemeMode = "auto" | "dark" | "light";
+
+function getSavedTheme(): ThemeMode {
+  const v = localStorage.getItem("theme");
+  return v === "dark" || v === "light" || v === "auto" ? v : "auto";
+}
+
+function applyTheme(mode: ThemeMode) {
+  const root = document.documentElement; // <html>
+  if (mode === "auto") root.removeAttribute("data-theme");
+  else root.setAttribute("data-theme", mode);
+  localStorage.setItem("theme", mode);
+}
+
+export default function App() {
+  const [tab, setTab] = useState<Tab>("today");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const [detailId, setDetailId] = useState<number | null>(null);
+  const [backTab, setBackTab] = useState<Tab>("today");
+
+  const [theme, setTheme] = useState<ThemeMode>(() => {
+    // lazy init (évite de recalculer à chaque render)
+    return typeof window === "undefined" ? "auto" : getSavedTheme();
+  });
+
+  // Applique le thème au montage + quand il change
+  useEffect(() => {
+    applyTheme(theme);
+  }, [theme]);
+
+  function openDetail(from: Tab, id: number) {
+    setBackTab(from);
+    setDetailId(id);
+    setMenuOpen(false);
+  }
+
+  function goBack() {
+    setDetailId(null);
+    setTab(backTab);
+  }
+
+  return (
+    <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
+      {/* Bandeau (image) */}
+      <div style={styles.bannerWrap}>
+        <img src="/banner.jpg" alt="Exodus" style={styles.bannerImg} />
+      </div>
+
+      {/* Top bar + burger */}
+      <header style={styles.topBar}>
+        <div style={styles.topTitle}>
+          {detailId ? "Détail" : tab === "today" ? "Aujourd’hui" : "Tous les jours"}
+        </div>
+
+        <button
+          onClick={() => setMenuOpen((v) => !v)}
+          style={styles.burgerBtn}
+          aria-label="Ouvrir le menu"
+        >
+          ☰
+        </button>
+      </header>
+
+      {/* Drawer menu */}
+      {menuOpen ? (
+        <div style={styles.overlay} onClick={() => setMenuOpen(false)}>
+          <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
+            <div style={{ fontWeight: 900, marginBottom: 10 }}>Menu</div>
+
+            <button
+              style={{
+                ...styles.menuItem,
+                ...(tab === "today" ? styles.menuActive : {}),
+              }}
+              onClick={() => {
+                setDetailId(null);
+                setTab("today");
+                setMenuOpen(false);
+              }}
+            >
+              Aujourd’hui
+            </button>
+
+            <button
+              style={{
+                ...styles.menuItem,
+                ...(tab === "all" ? styles.menuActive : {}),
+              }}
+              onClick={() => {
+                setDetailId(null);
+                setTab("all");
+                setMenuOpen(false);
+              }}
+            >
+              Tous les jours
+            </button>
+
+            {/* Thème */}
+            <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
+              Thème
+            </div>
+
+            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
+              {(["auto", "dark", "light"] as ThemeMode[]).map((m) => (
+                <button
+                  key={m}
+                  style={{
+                    ...styles.menuItem,
+                    marginBottom: 0,
+                    flex: 1,
+                    textAlign: "center",
+                    ...(theme === m ? styles.menuActive : {}),
+                  }}
+                  onClick={() => setTheme(m)}
+                  aria-pressed={theme === m}
+                >
+                  {m === "auto" ? "Auto" : m === "dark" ? "Sombre" : "Clair"}
+                </button>
+              ))}
+            </div>
+
+            <div style={{ marginTop: 14, opacity: 0.7, fontSize: 12 }}>
+              Exodus PWA
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Contenu */}
+      <main style={{ padding: 16 }}>
+        {detailId ? (
+          <DayDetail id={detailId} onBack={goBack} />
+        ) : tab === "today" ? (
+          <Today onOpenDetail={(id) => openDetail("today", id)} />
+        ) : (
+          <AllDays onSelectDay={(id) => openDetail("all", id)} />
+        )}
+      </main>
+    </div>
+  );
+}
 
 const styles: Record<string, React.CSSProperties> = {
-  container: {
-    minHeight: "100vh",
-    background: "var(--bg)",
-  },
-
-  header: {
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-    background: "rgba(255,255,255,0.6)",
-    backdropFilter: "blur(8px)",
+  bannerWrap: {
+    height: 220, // ajuste si besoin
+    overflow: "hidden",
     borderBottom: "1px solid var(--border)",
   },
-
-  banner: {
-    height: 300, // ajuste ici la hauteur du bandeau
-    overflow: "hidden",
-  },
-
   bannerImg: {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    objectPosition: "center 20%", // ↓ descend l’image (essaie 70%, 80%, 90%)
+    objectPosition: "center 20%", // remonte pour mieux voir le logo
     display: "block",
-    background: "rgba(255,255,255,0.2)",
   },
 
-  nav: {
+  topBar: {
     display: "flex",
-    gap: 8,
-    padding: 12,
+    alignItems: "center",
+    justifyContent: "space-between",
+    padding: "10px 16px",
+    position: "sticky",
+    top: 0,
+    zIndex: 10,
+    background: "rgba(0,0,0,0.20)", // neutre (ok en clair & sombre)
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid var(--border)",
   },
-
-  tab: {
-    flex: 1,
-    padding: "10px 12px",
-    borderRadius: 12,
-    border: "1px solid rgba(0,0,0,.12)",
-    background: "white",
-    cursor: "pointer",
-    fontWeight: 600,
-  },
-
-  active: {
-    background: "#111827",
+  topTitle: {
     color: "white",
-    borderColor: "#111827",
+    fontWeight: 900,
+    fontSize: 18,
+    letterSpacing: 0.2,
+  },
+  burgerBtn: {
+    border: "1px solid var(--border)",
+    background: "rgba(255,255,255,0.06)",
+    color: "white",
+    borderRadius: 12,
+    padding: "8px 12px",
+    cursor: "pointer",
+    fontWeight: 900,
+    fontSize: 18,
+    lineHeight: 1,
+  },
+
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    zIndex: 50,
+    display: "flex",
+    justifyContent: "flex-end",
+  },
+  drawer: {
+    width: 280,
+    height: "100%",
+    background: "var(--card)",
+    borderLeft: "1px solid var(--border)",
+    padding: 16,
+    boxShadow: "var(--shadow)",
+    color: "var(--text)",
+  },
+  menuItem: {
+    width: "100%",
+    textAlign: "left",
+    border: "1px solid var(--border)",
+    background: "rgba(255,255,255,0.06)",
+    color: "var(--text)",
+    borderRadius: 14,
+    padding: "10px 12px",
+    cursor: "pointer",
+    fontWeight: 800,
+    marginBottom: 10,
+  },
+  menuActive: {
+    background: "var(--accentSoft)",
+    borderColor: "var(--accentBorder)",
   },
 };
-
-export default function App() {
-  const [tab, setTab] = useState<Tab>("today");
-  const [selectedId, setSelectedId] = useState<number | null>(null);
-
-  // mémorise d'où on vient quand on ouvre le détail
-  const [detailFrom, setDetailFrom] = useState<"today" | "all">("all");
-
-  const openDetailFromToday = (id: number) => {
-    setDetailFrom("today");
-    setSelectedId(id);
-    setTab("detail");
-  };
-
-  const openDetailFromAll = (id: number) => {
-    setDetailFrom("all");
-    setSelectedId(id);
-    setTab("detail");
-  };
-
-  const goBackFromDetail = () => {
-    setTab(detailFrom);
-  };
-
-  return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <div style={styles.banner}>
-          {/* Mets ton image dans: public/banner.jpg */}
-          <img src="/banner.jpg" alt="Bandeau" style={styles.bannerImg} />
-        </div>
-
-        <nav style={styles.nav}>
-          <button
-            style={{ ...styles.tab, ...(tab === "today" ? styles.active : {}) }}
-            onClick={() => setTab("today")}
-          >
-            Aujourd’hui
-          </button>
-
-          <button
-            style={{ ...styles.tab, ...(tab === "all" ? styles.active : {}) }}
-            onClick={() => setTab("all")}
-          >
-            Tous
-          </button>
-        </nav>
-      </header>
-
-      {tab === "today" ? (
-        <Today onOpenDetail={openDetailFromToday} />
-      ) : tab === "all" ? (
-        <AllDays onSelectDay={openDetailFromAll} />
-      ) : selectedId != null ? (
-        <DayDetail id={selectedId} onBack={goBackFromDetail} />
-      ) : (
-        <div style={{ padding: 20 }}>Aucun jour sélectionné.</div>
-      )}
-    </div>
-  );
-}

@@ -1,17 +1,70 @@
-:root {
-  /* Palette marron / orangé pastel */
-  --bg: #f3eee7;
-  --card: #fffaf3;
-  --text: #1f2937;
-  --muted: rgba(31, 41, 55, 0.72);
-  --border: rgba(31, 41, 55, 0.15);
+/* ===== THEME TOKENS ===== */
 
-  --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+/* Auto = valeur par défaut (light) */
+:root {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: rgba(17, 24, 39, 0.96);
+  --muted: rgba(55, 65, 81, 0.75);
+  --border: rgba(17, 24, 39, 0.10);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
   --radius: 18px;
+
+  --accentSoft: rgba(148, 163, 184, 0.26);
+  --accentBorder: rgba(148, 163, 184, 0.35);
+
+  --fs-bible: 10.5pt;
+  --fs-body: 11pt;
 }
 
-* {
-  box-sizing: border-box;
+/* Auto (suit le système) : si l’OS est en dark, on bascule automatiquement */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1f2937;
+    --card: #1b2432;
+    --text: rgba(243, 244, 246, 0.96);
+    --muted: rgba(209, 213, 219, 0.80);
+    --border: rgba(243, 244, 246, 0.14);
+
+    --shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+
+    --accentSoft: rgba(148, 163, 184, 0.22);
+    --accentBorder: rgba(148, 163, 184, 0.30);
+  }
+}
+
+/* Forcer clair */
+html[data-theme="light"] {
+  --bg: #f4f6f9;
+  --card: #ffffff;
+  --text: rgba(17, 24, 39, 0.96);
+  --muted: rgba(55, 65, 81, 0.75);
+  --border: rgba(17, 24, 39, 0.10);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+
+  --accentSoft: rgba(148, 163, 184, 0.26);
+  --accentBorder: rgba(148, 163, 184, 0.35);
+}
+
+/* Forcer sombre */
+html[data-theme="dark"] {
+  --bg: #1f2937;
+  --card: #1b2432;
+  --text: rgba(243, 244, 246, 0.96);
+  --muted: rgba(209, 213, 219, 0.80);
+  --border: rgba(243, 244, 246, 0.14);
+
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.30);
+
+  --accentSoft: rgba(148, 163, 184, 0.22);
+  --accentBorder: rgba(148, 163, 184, 0.30);
+}
+
+/* Sélection */
+::selection {
+  background: var(--accentSoft);
 }
 
 html,
@@ -29,6 +82,19 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  color: var(--textCard);
+}
+
+.card .muted {
+  color: var(--mutedCard);
+}
+
+
 a {
   color: inherit;
   text-decoration: underline;
@@ -39,7 +105,6 @@ input {
   font: inherit;
 }
 
-/* Titres : évite les espacements par défaut trop grands */
 h1,
 h2,
 h3 {
@@ -48,48 +113,47 @@ h3 {
   margin-block-end: 0;
 }
 
-/* Sélection */
 ::selection {
-  background: rgba(217, 119, 6, 0.22);
+  background: var(--accentSoft);
+}
+
+/* Typo */
+.bibleText {
+  font-size: var(--fs-bible);
+}
+
+.bodyText {
+  font-size: var(--fs-body);
+  font-family: Georgia, serif;
 }
 
 /* =========================================================
-   MARKDOWN (.md) : compact + listes correctes
+   MARKDOWN (.md)
    ========================================================= */
 
-/* Paragraphes : petit écart entre \n\n (paragraphes) */
+/* Paragraphes : \n\n = paragraphes avec petit espace */
 .md p {
-  margin: 0 0 6px 0 !important; /* <-- espace entre paragraphes */
+  margin: 0 0 6px 0 !important;
   line-height: 1.1;
 }
-
-/* Pas d'espace après le dernier paragraphe */
 .md p:last-child {
   margin-bottom: 0 !important;
 }
 
-/* Dans une liste, on ne veut pas que le <p> passe à la ligne */
+/* Dans une liste, pas de paragraphe “block” */
 .md li > p {
   display: inline !important;
   margin: 0 !important;
 }
 
-
-/* Si une sous-liste suit un <p>, elle doit rester en bloc */
-.md li > p + ul,
-.md li > p + ol {
-  display: block !important;
-}
-
-/* Listes (base) */
+/* Listes */
 .md ul,
 .md ol {
   margin: 0 !important;
-  padding-left: 22px !important; /* niveau 1 */
+  padding-left: 20px !important;
   line-height: 1.1;
 }
 
-/* ✅ FIX BÉTON : si un reset CSS a mis li {display:block} / list-style:none */
 .md ul > li,
 .md ol > li {
   display: list-item !important;
@@ -98,50 +162,25 @@ h3 {
   list-style-position: outside !important;
 }
 
-/* Puces / numéros */
 .md ul > li {
   list-style-type: disc !important;
 }
 
 .md ul ul > li {
-  list-style-type: circle !important; /* sous-puces */
+  list-style-type: circle !important;
 }
 
 .md ol > li {
   list-style-type: decimal !important;
 }
 
-/* ✅ Sous-listes : vraie tabulation (beaucoup plus à droite) */
 .md ul ul,
 .md ol ol,
 .md ul ol,
 .md ol ul {
-  padding-left: 38px !important; /* niveau 2 */
-  margin-top: 0 !important;
+  padding-left: 22px !important;
 }
 
-/* ✅ Réduit l'espace entre une puce principale et sa sous-liste */
-.md li > ul,
-.md li > ol {
-  margin-top: 0 !important;
-  padding-top: 0 !important;
-}
-
-/* Un poil d'air entre blocs markdown successifs (si tu veux 0, mets 0) */
 .md > * + * {
   margin-top: 2px !important;
-}
-:root {
-  --fs-bible: 10.5pt;
-  --fs-body: 11pt;
-}
-
-/* Styles typographiques pour l'app */
-.bibleText {
-  font-size: var(--fs-bible);
-}
-
-.bodyText {
-  font-size: var(--fs-body);
-  font-family: Georgia, serif;
 }

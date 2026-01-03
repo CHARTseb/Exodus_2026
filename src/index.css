@@ -528,5 +528,8 @@ h3 {
   opacity: 0.9;
   cursor: not-allowed;
 }
-
+}
+@media print {
+  .noPrint { display: none !important; }
+  .printArea { max-width: 720px; margin: 0 auto; }
 }

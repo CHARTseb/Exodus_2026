@@ -2,24 +2,30 @@ import { useEffect, useMemo, useState } from "react";
 import { deleteNote, getNote, setNote } from "../utils/notes";
 
 export default function DayNoteEditor({ dayId }: { dayId: string }) {
-  const initial = useMemo(() => getNote(dayId)?.text ?? "", [dayId]);
-  const [text, setText] = useState(initial);
-  const [savedAt, setSavedAt] = useState<string | null>(getNote(dayId)?.updatedAt ?? null);
+  const initialNote = useMemo(() => getNote(dayId), [dayId]);
 
+  const [text, setText] = useState(initialNote?.content ?? "");
+  const [savedAt, setSavedAt] = useState<number | null>(
+    initialNote?.updatedAt ?? null
+  );
+
+  // Quand on change de jour
   useEffect(() => {
-    setText(getNote(dayId)?.text ?? "");
-    setSavedAt(getNote(dayId)?.updatedAt ?? null);
+    const note = getNote(dayId);
+    setText(note?.content ?? "");
+    setSavedAt(note?.updatedAt ?? null);
   }, [dayId]);
 
+  // Auto-save
   useEffect(() => {
     const t = window.setTimeout(() => {
-      // Ne pas créer une note vide “fantôme”
       if (text.trim() === "") {
         deleteNote(dayId);
         setSavedAt(null);
       } else {
         setNote(dayId, text);
-        setSavedAt(getNote(dayId)?.updatedAt ?? null);
+        const updated = getNote(dayId);
+        setSavedAt(updated?.updatedAt ?? null);
       }
     }, 400);
 
@@ -28,10 +34,19 @@ export default function DayNoteEditor({ dayId }: { dayId: string }) {
 
   return (
     <div style={{ marginTop: 12 }}>
-      <div style={{ display: "flex", justifyContent: "space-between", gap: 12, alignItems: "baseline" }}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          gap: 12,
+          alignItems: "baseline",
+        }}
+      >
         <div style={{ fontWeight: 800 }}>Note personnelle</div>
         <div style={{ opacity: 0.75, fontSize: 12 }}>
-          {savedAt ? `Enregistré : ${new Date(savedAt).toLocaleString()}` : "Aucune note"}
+          {savedAt
+            ? `Enregistré : ${new Date(savedAt).toLocaleString()}`
+            : "Aucune note"}
         </div>
       </div>
 
@@ -43,7 +58,13 @@ export default function DayNoteEditor({ dayId }: { dayId: string }) {
         rows={7}
       />
 
-      <div style={{ marginTop: 8, display: "flex", justifyContent: "flex-end" }}>
+      <div
+        style={{
+          marginTop: 8,
+          display: "flex",
+          justifyContent: "flex-end",
+        }}
+      >
         <button
           className="whyMiniBtn"
           onClick={() => {

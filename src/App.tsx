@@ -5,7 +5,7 @@ import DayDetail from "./pages/DayDetail";
 import Specials from "./pages/Specials";
 import SpecialDetail from "./pages/SpecialDetail";
 import Notebook from "./pages/Notebook";
-import { SPECIAL_PAGES, type SpecialId } from "./data/specials";
+import type { SpecialId } from "./data/specials";
 import "./App.css";
 
 /* =========================

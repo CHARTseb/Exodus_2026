@@ -1,6 +1,7 @@
 export type SpecialId =
   | "parcours-exodus"
   | "priere"
+  | "heure-sainte"
   | "asceses"
   | "fraternite"
   | "pourquoi"
@@ -10,15 +11,19 @@ export type SpecialId =
 export type SpecialPage = {
   id: SpecialId;
   title: string;
-  bodyMd: string; // markdown (recommandé)
+  mdPath?: string;
+  bodyMd?: string; // fallback / legacy
 };
 
 export const SPECIAL_PAGES: SpecialPage[] = [
-  { id: "parcours-exodus", title: "Parcours Exodus", bodyMd: "Contenu à venir…" },
-  { id: "priere", title: "La Prière", bodyMd: "Contenu à venir…" },
-  { id: "asceses", title: "Les Ascèses", bodyMd: "Contenu à venir…" },
-  { id: "fraternite", title: "La Fraternité", bodyMd: "Contenu à venir…" },
-  { id: "pourquoi", title: "Votre Pourquoi", bodyMd: "Contenu à venir…" },
-  { id: "guide-reunions", title: "Guide des réunions", bodyMd: "Contenu à venir…" },
-  { id: "examen-conscience", title: "Examen de conscience", bodyMd: "Contenu à venir…" },
+  { id: "parcours-exodus", title: "Parcours Exodus", mdPath: "/specials/parcours-exodus.md" },
+  { id: "priere", title: "La Prière", mdPath: "/specials/priere.md" },
+  { id: "heure-sainte", title: "Prier une heure sainte", mdPath: "/specials/heure-sainte.md" },
+  { id: "asceses", title: "Les Ascèses", mdPath: "/specials/asceses.md" },
+  { id: "fraternite", title: "La Fraternité", mdPath: "/specials/fraternite.md" },
+
+  // ✅ Page maintenant active
+  { id: "pourquoi", title: "Votre Pourquoi", mdPath: "/specials/votre-pourquoi.md" },
+  { id: "guide-reunions", title: "Guide des réunions", mdPath: "/specials/guide-reunions.md" },
+  { id: "examen-conscience", title: "Examen de conscience", mdPath: "/specials/examen-conscience.md" },
 ];

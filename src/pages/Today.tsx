@@ -5,6 +5,7 @@ import type { DayEntry } from "../types";
 import ReactMarkdown from "react-markdown";
 import { formatDateFR } from "../utils/date";
 import { cleanMd, mdComponents } from "../utils/markdown";
+import { hasNote } from "../utils/notes";
 
 function toIsoDate(d: Date) {
   const yyyy = d.getFullYear();
@@ -60,12 +61,14 @@ export default function Today({
     );
   }
 
+  const noteExists = hasNote(String(todayEntry.id));
+
   return (
     <div style={{ maxWidth: 820, margin: "0 auto", padding: 16 }}>
       <h1 style={{ marginTop: 0 }}>Aujourd’hui</h1>
 
       <Card title={todayEntry.titre}>
-        {/* Date + bouton Détail */}
+        {/* Date + boutons */}
         <div
           style={{
             display: "flex",
@@ -76,21 +79,42 @@ export default function Today({
             opacity: 0.9,
           }}
         >
-          <b>{formatDateFR(todayEntry.date)}</b>
+          <div style={{ display: "flex", alignItems: "baseline", gap: 10 }}>
+            <b>{formatDateFR(todayEntry.date)}</b>
+            {noteExists ? (
+              <span style={{ fontSize: 12, opacity: 0.75 }}>• Note enregistrée</span>
+            ) : null}
+          </div>
 
-          <button
-            onClick={() => onOpenDetail(todayEntry.id)}
-            style={{
-              border: "1px solid rgba(0,0,0,.15)",
-              background: "white",
-              borderRadius: 12,
-              padding: "8px 12px",
-              cursor: "pointer",
-              fontWeight: 600,
-            }}
-          >
-            Détail →
-          </button>
+          <div style={{ display: "flex", gap: 8 }}>
+            <button
+              onClick={() => onOpenDetail(todayEntry.id)}
+              style={{
+                border: "1px solid rgba(0,0,0,.15)",
+                background: "white",
+                borderRadius: 12,
+                padding: "8px 12px",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              Note ✍️
+            </button>
+
+            <button
+              onClick={() => onOpenDetail(todayEntry.id)}
+              style={{
+                border: "1px solid rgba(0,0,0,.15)",
+                background: "white",
+                borderRadius: 12,
+                padding: "8px 12px",
+                cursor: "pointer",
+                fontWeight: 600,
+              }}
+            >
+              Détail →
+            </button>
+          </div>
         </div>
 
         {/* Référence biblique */}

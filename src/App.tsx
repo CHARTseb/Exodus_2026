@@ -4,11 +4,20 @@ import AllDays from "./pages/AllDays";
 import DayDetail from "./pages/DayDetail";
 import Specials from "./pages/Specials";
 import SpecialDetail from "./pages/SpecialDetail";
+import Notebook from "./pages/Notebook";
 import { SPECIAL_PAGES, type SpecialId } from "./data/specials";
 import "./App.css";
 
-type Tab = "today" | "all" | "special";
+/* =========================
+   Types
+   ========================= */
+
+type Tab = "today" | "all" | "notebook" | "special";
 type ThemeMode = "auto" | "dark" | "light";
+
+/* =========================
+   Thème
+   ========================= */
 
 function getSavedTheme(): ThemeMode {
   const v = localStorage.getItem("theme");
@@ -16,32 +25,40 @@ function getSavedTheme(): ThemeMode {
 }
 
 function applyTheme(mode: ThemeMode) {
-  const root = document.documentElement; // <html>
+  const root = document.documentElement;
   if (mode === "auto") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", mode);
   localStorage.setItem("theme", mode);
 }
 
+/* =========================
+   App
+   ========================= */
+
 export default function App() {
   const [tab, setTab] = useState<Tab>("today");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Jours (DayDetail)
+  // Détail jour
   const [detailId, setDetailId] = useState<number | null>(null);
   const [backTab, setBackTab] = useState<Tab>("today");
 
-  // Pages spéciales (SpecialDetail)
+  // Pages spéciales
   const [specialId, setSpecialId] = useState<SpecialId | null>(null);
   const [specialBackTab, setSpecialBackTab] = useState<Tab>("today");
 
   // Thème
-  const [theme, setTheme] = useState<ThemeMode>(() => {
-    return typeof window === "undefined" ? "auto" : getSavedTheme();
-  });
+  const [theme, setTheme] = useState<ThemeMode>(() =>
+    typeof window === "undefined" ? "auto" : getSavedTheme()
+  );
 
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  /* =========================
+     Navigation helpers
+     ========================= */
 
   function openDetail(from: Tab, id: number) {
     setBackTab(from);
@@ -63,9 +80,12 @@ export default function App() {
 
   function goBackSpecial() {
     setSpecialId(null);
-    // si on venait déjà de "special", on reste sur le hub
     setTab(specialBackTab === "special" ? "special" : specialBackTab);
   }
+
+  /* =========================
+     Titre top bar
+     ========================= */
 
   const topTitle = detailId
     ? "Détail"
@@ -75,16 +95,22 @@ export default function App() {
     ? "Aujourd’hui"
     : tab === "all"
     ? "Tous les jours"
+    : tab === "notebook"
+    ? "Mon carnet"
     : "Pages spéciales";
+
+  /* =========================
+     Render
+     ========================= */
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-      {/* Bandeau (image) */}
+      {/* Bandeau */}
       <div style={styles.bannerWrap}>
         <img src="/banner.jpg" alt="Exodus" style={styles.bannerImg} />
       </div>
 
-      {/* Top bar + burger */}
+      {/* Top bar */}
       <header style={styles.topBar}>
         <div style={styles.topTitle}>{topTitle}</div>
 
@@ -97,8 +123,8 @@ export default function App() {
         </button>
       </header>
 
-      {/* Drawer menu */}
-      {menuOpen ? (
+      {/* Menu burger */}
+      {menuOpen && (
         <div style={styles.overlay} onClick={() => setMenuOpen(false)}>
           <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontWeight: 900, marginBottom: 10 }}>Menu</div>
@@ -107,7 +133,9 @@ export default function App() {
             <button
               style={{
                 ...styles.menuItem,
-                ...(tab === "today" && !detailId && !specialId ? styles.menuActive : {}),
+                ...(tab === "today" && !detailId && !specialId
+                  ? styles.menuActive
+                  : {}),
               }}
               onClick={() => {
                 setDetailId(null);
@@ -122,7 +150,9 @@ export default function App() {
             <button
               style={{
                 ...styles.menuItem,
-                ...(tab === "all" && !detailId && !specialId ? styles.menuActive : {}),
+                ...(tab === "all" && !detailId && !specialId
+                  ? styles.menuActive
+                  : {}),
               }}
               onClick={() => {
                 setDetailId(null);
@@ -137,7 +167,26 @@ export default function App() {
             <button
               style={{
                 ...styles.menuItem,
-                ...(tab === "special" && !detailId ? styles.menuActive : {}),
+                ...(tab === "notebook" && !detailId
+                  ? styles.menuActive
+                  : {}),
+              }}
+              onClick={() => {
+                setDetailId(null);
+                setSpecialId(null);
+                setTab("notebook");
+                setMenuOpen(false);
+              }}
+            >
+              Mon carnet
+            </button>
+
+            <button
+              style={{
+                ...styles.menuItem,
+                ...(tab === "special" && !detailId
+                  ? styles.menuActive
+                  : {}),
               }}
               onClick={() => {
                 setDetailId(null);
@@ -149,7 +198,7 @@ export default function App() {
               Pages spéciales
             </button>
 
-            {/* Pages spéciales - raccourcis */}
+            {/* Raccourcis pages spéciales */}
             <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
               Raccourcis
             </div>
@@ -184,7 +233,6 @@ export default function App() {
                     ...(theme === m ? styles.menuActive : {}),
                   }}
                   onClick={() => setTheme(m)}
-                  aria-pressed={theme === m}
                 >
                   {m === "auto" ? "Auto" : m === "dark" ? "Sombre" : "Clair"}
                 </button>
@@ -196,7 +244,7 @@ export default function App() {
             </div>
           </div>
         </div>
-      ) : null}
+      )}
 
       {/* Contenu */}
       <main style={{ padding: 16 }}>
@@ -208,6 +256,8 @@ export default function App() {
           <Today onOpenDetail={(id) => openDetail("today", id)} />
         ) : tab === "all" ? (
           <AllDays onSelectDay={(id) => openDetail("all", id)} />
+        ) : tab === "notebook" ? (
+          <Notebook onOpenDetail={(id) => openDetail("notebook", id)} />
         ) : (
           <Specials onOpen={(id) => openSpecial("special", id)} />
         )}
@@ -215,6 +265,10 @@ export default function App() {
     </div>
   );
 }
+
+/* =========================
+   Styles
+   ========================= */
 
 const styles: Record<string, React.CSSProperties> = {
   bannerWrap: {

@@ -3,6 +3,7 @@ import { useDays } from "../data/useDays";
 import { Card } from "../components/Card";
 import ReactMarkdown from "react-markdown";
 import { cleanMd, mdComponents } from "../utils/markdown";
+import DayNoteEditor from "../components/DayNoteEditor";
 
 export default function DayDetail({
   id,
@@ -88,6 +89,9 @@ export default function DayDetail({
             </div>
           </>
         ) : null}
+
+        {/* ✅ NOUVEAU : Note personnelle pour ce jour */}
+        <DayNoteEditor dayId={String(day.id)} />
       </Card>
     </div>
   );

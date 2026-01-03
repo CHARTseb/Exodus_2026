@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import Today from "./pages/Today";
 import AllDays from "./pages/AllDays";
 import DayDetail from "./pages/DayDetail";
+import Specials from "./pages/Specials";
+import SpecialDetail from "./pages/SpecialDetail";
+import { SPECIAL_PAGES, type SpecialId } from "./data/specials";
 import "./App.css";
 
-type Tab = "today" | "all";
+type Tab = "today" | "all" | "special";
 type ThemeMode = "auto" | "dark" | "light";
 
 function getSavedTheme(): ThemeMode {
@@ -23,15 +26,19 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("today");
   const [menuOpen, setMenuOpen] = useState(false);
 
+  // Jours (DayDetail)
   const [detailId, setDetailId] = useState<number | null>(null);
   const [backTab, setBackTab] = useState<Tab>("today");
 
+  // Pages spéciales (SpecialDetail)
+  const [specialId, setSpecialId] = useState<SpecialId | null>(null);
+  const [specialBackTab, setSpecialBackTab] = useState<Tab>("today");
+
+  // Thème
   const [theme, setTheme] = useState<ThemeMode>(() => {
-    // lazy init (évite de recalculer à chaque render)
     return typeof window === "undefined" ? "auto" : getSavedTheme();
   });
 
-  // Applique le thème au montage + quand il change
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
@@ -42,10 +49,33 @@ export default function App() {
     setMenuOpen(false);
   }
 
-  function goBack() {
+  function goBackDay() {
     setDetailId(null);
     setTab(backTab);
   }
+
+  function openSpecial(from: Tab, id: SpecialId) {
+    setSpecialBackTab(from);
+    setTab("special");
+    setSpecialId(id);
+    setMenuOpen(false);
+  }
+
+  function goBackSpecial() {
+    setSpecialId(null);
+    // si on venait déjà de "special", on reste sur le hub
+    setTab(specialBackTab === "special" ? "special" : specialBackTab);
+  }
+
+  const topTitle = detailId
+    ? "Détail"
+    : specialId
+    ? "Pages spéciales"
+    : tab === "today"
+    ? "Aujourd’hui"
+    : tab === "all"
+    ? "Tous les jours"
+    : "Pages spéciales";
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
@@ -56,9 +86,7 @@ export default function App() {
 
       {/* Top bar + burger */}
       <header style={styles.topBar}>
-        <div style={styles.topTitle}>
-          {detailId ? "Détail" : tab === "today" ? "Aujourd’hui" : "Tous les jours"}
-        </div>
+        <div style={styles.topTitle}>{topTitle}</div>
 
         <button
           onClick={() => setMenuOpen((v) => !v)}
@@ -75,13 +103,15 @@ export default function App() {
           <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontWeight: 900, marginBottom: 10 }}>Menu</div>
 
+            {/* Navigation principale */}
             <button
               style={{
                 ...styles.menuItem,
-                ...(tab === "today" ? styles.menuActive : {}),
+                ...(tab === "today" && !detailId && !specialId ? styles.menuActive : {}),
               }}
               onClick={() => {
                 setDetailId(null);
+                setSpecialId(null);
                 setTab("today");
                 setMenuOpen(false);
               }}
@@ -92,16 +122,50 @@ export default function App() {
             <button
               style={{
                 ...styles.menuItem,
-                ...(tab === "all" ? styles.menuActive : {}),
+                ...(tab === "all" && !detailId && !specialId ? styles.menuActive : {}),
               }}
               onClick={() => {
                 setDetailId(null);
+                setSpecialId(null);
                 setTab("all");
                 setMenuOpen(false);
               }}
             >
               Tous les jours
             </button>
+
+            <button
+              style={{
+                ...styles.menuItem,
+                ...(tab === "special" && !detailId ? styles.menuActive : {}),
+              }}
+              onClick={() => {
+                setDetailId(null);
+                setSpecialId(null);
+                setTab("special");
+                setMenuOpen(false);
+              }}
+            >
+              Pages spéciales
+            </button>
+
+            {/* Pages spéciales - raccourcis */}
+            <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
+              Raccourcis
+            </div>
+
+            {SPECIAL_PAGES.map((p) => (
+              <button
+                key={p.id}
+                style={{
+                  ...styles.menuItem,
+                  ...(specialId === p.id ? styles.menuActive : {}),
+                }}
+                onClick={() => openSpecial(tab, p.id)}
+              >
+                {p.title}
+              </button>
+            ))}
 
             {/* Thème */}
             <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
@@ -137,11 +201,15 @@ export default function App() {
       {/* Contenu */}
       <main style={{ padding: 16 }}>
         {detailId ? (
-          <DayDetail id={detailId} onBack={goBack} />
+          <DayDetail id={detailId} onBack={goBackDay} />
+        ) : specialId ? (
+          <SpecialDetail id={specialId} onBack={goBackSpecial} />
         ) : tab === "today" ? (
           <Today onOpenDetail={(id) => openDetail("today", id)} />
-        ) : (
+        ) : tab === "all" ? (
           <AllDays onSelectDay={(id) => openDetail("all", id)} />
+        ) : (
+          <Specials onOpen={(id) => openSpecial("special", id)} />
         )}
       </main>
     </div>
@@ -150,7 +218,7 @@ export default function App() {
 
 const styles: Record<string, React.CSSProperties> = {
   bannerWrap: {
-    height: 220, // ajuste si besoin
+    height: 220,
     overflow: "hidden",
     borderBottom: "1px solid var(--border)",
   },
@@ -158,7 +226,7 @@ const styles: Record<string, React.CSSProperties> = {
     width: "100%",
     height: "100%",
     objectFit: "cover",
-    objectPosition: "center 20%", // remonte pour mieux voir le logo
+    objectPosition: "center 20%",
     display: "block",
   },
 
@@ -170,7 +238,7 @@ const styles: Record<string, React.CSSProperties> = {
     position: "sticky",
     top: 0,
     zIndex: 10,
-    background: "rgba(0,0,0,0.20)", // neutre (ok en clair & sombre)
+    background: "rgba(0,0,0,0.20)",
     backdropFilter: "blur(10px)",
     borderBottom: "1px solid var(--border)",
   },
@@ -201,13 +269,14 @@ const styles: Record<string, React.CSSProperties> = {
     justifyContent: "flex-end",
   },
   drawer: {
-    width: 280,
+    width: 290,
     height: "100%",
     background: "var(--card)",
     borderLeft: "1px solid var(--border)",
     padding: 16,
     boxShadow: "var(--shadow)",
     color: "var(--text)",
+    overflowY: "auto",
   },
   menuItem: {
     width: "100%",

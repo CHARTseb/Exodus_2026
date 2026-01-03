@@ -225,7 +225,7 @@ export default function App() {
               Exodus PWA
             </div>
           </div>
-        </div>
+         </div> 
       )}
 
       {/* Contenu */}

@@ -101,17 +101,15 @@ Dans la mesure du possible, nommez :
 
 Ce choix demandera du courage, mais il apportera de la clarté.
 
-<div class="callout">
-<strong>Rappelez-vous :</strong><br/>
-Dieu désire votre liberté encore plus que vous.
-</div>
+> **Rappelez-vous :**  
+> Dieu désire votre liberté encore plus que vous.
 
-<div class="callout">
-<strong>Prenez un temps de silence.</strong><br/>
-Éloignez votre téléphone.<br/>
-Placez-vous en présence de Dieu.<br/>
-Demandez-lui la grâce de voir clair… et d’oser la vérité.
-</div>
+> **Prenez un temps de silence.**  
+> Éloignez votre téléphone.  
+> Placez-vous en présence de Dieu.  
+> Demandez-lui la grâce de voir clair… et d’oser la vérité.
+
+---
 
 ## Écrivez votre pourquoi
 
@@ -120,33 +118,33 @@ Prenez un moment seul, sans vous presser.
 
 ### Ma dépendance / mon attachement principal
 
-<!-- editable:dependance -->
+<span data-editable="dependance"></span>
 > _Exemple : téléphone, nourriture, contrôle, pornographie, confort…_
 
 ---
 
 ### Les personnes pour lesquelles je veux être libre
 
-<!-- editable:personnes -->
+<span data-editable="personnes"></span>
 > _Exemple : mon épouse, mes enfants, ma fiancée, mes frères, une personne confiée…_
 
 ---
 
 ### Comment ma liberté les servira concrètement
 
-<!-- editable:service -->
+<span data-editable="service"></span>
 > _Exemple : plus de présence, plus d’écoute, plus de patience, plus de disponibilité…_
 
 ---
 
 ### Comment cette liberté m’aidera à accomplir le plan de Dieu
 
-<!-- editable:plan -->
+<span data-editable="plan"></span>
 > _Exemple : être un homme fidèle, un père juste, un disciple disponible…_
 
 ---
 
 ### Mon **POURQUOI** (en une ou deux phrases)
 
-<!-- editable:pourquoi -->
+<span data-editable="pourquoi"></span>
 > _« Je veux être libre de … afin de … pour … »_

@@ -1,29 +1,30 @@
 import { useEffect, useMemo, useRef, useState } from "react";
-import { Card } from "../components/Card";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
+
+import { Card } from "../components/Card";
 import { cleanMd, mdComponents as baseMdComponents } from "../utils/markdown";
 import { SPECIAL_PAGES, type SpecialId } from "../data/specials";
+
+/* =========================================================
+   Utils
+   ========================================================= */
 
 function storageKey(pageId: SpecialId, fieldKey: string) {
   return `special:${pageId}:${fieldKey}`;
 }
 
-function Callout({ children }: { children: React.ReactNode }) {
-  return <div className="calloutBox">{children}</div>;
-}
+/* =========================================================
+   Editable block
+   ========================================================= */
 
 function EditableBlock({
   lsKey,
   placeholder,
-  locked,
-  onReset,
   rows = 4,
 }: {
   lsKey: string;
   placeholder?: string;
-  locked: boolean;
-  onReset: () => void;
   rows?: number;
 }) {
   const [value, setValue] = useState<string>(() => localStorage.getItem(lsKey) ?? "");
@@ -40,16 +41,14 @@ function EditableBlock({
         onChange={(e) => setValue(e.target.value)}
         placeholder={placeholder}
         rows={rows}
-        readOnly={locked}
       />
-      <div className="whyFieldActions">
-        <button className="whyMiniBtn" onClick={onReset} disabled={locked && !value}>
-          Réinitialiser
-        </button>
-      </div>
     </div>
   );
 }
+
+/* =========================================================
+   Page
+   ========================================================= */
 
 export default function SpecialDetail({
   id,
@@ -63,18 +62,16 @@ export default function SpecialDetail({
 
   const isPourquoi = id === "pourquoi";
 
-  const [md, setMd] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(true);
+  const [md, setMd] = useState("");
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [locked, setLocked] = useState<boolean>(() => localStorage.getItem(`ui:locked:${id}`) === "1");
-
-  // Marqueur editable détecté juste avant le prochain blockquote
+  /** Marqueur détecté avant le prochain blockquote */
   const pendingEditableKey = useRef<string | null>(null);
 
-  useEffect(() => {
-    localStorage.setItem(`ui:locked:${id}`, locked ? "1" : "0");
-  }, [id, locked]);
+  /* =======================================================
+     Load markdown
+     ======================================================= */
 
   useEffect(() => {
     let cancelled = false;
@@ -82,20 +79,17 @@ export default function SpecialDetail({
     async function load() {
       setLoading(true);
       setError(null);
-      setMd("");
 
       try {
-        if (!page) throw new Error("Page introuvable (id inconnu).");
-        if (!("mdPath" in page) || !page.mdPath) throw new Error("mdPath manquant pour cette page.");
+        if (!page?.mdPath) throw new Error("mdPath manquant.");
 
         const res = await fetch(page.mdPath);
-        if (!res.ok) throw new Error(`Impossible de charger ${page.mdPath} (HTTP ${res.status})`);
+        if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
 
         const text = await res.text();
         if (!cancelled) setMd(text);
-      } catch (e: unknown) {
-        const msg = e instanceof Error ? e.message : String(e);
-        if (!cancelled) setError(msg);
+      } catch (e: any) {
+        if (!cancelled) setError(e.message ?? String(e));
       } finally {
         if (!cancelled) setLoading(false);
       }
@@ -107,23 +101,26 @@ export default function SpecialDetail({
     };
   }, [page]);
 
+  /* =======================================================
+     Export
+     ======================================================= */
+
   async function exportToClipboard() {
     const prefix = `special:${id}:`;
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith(prefix));
-    keys.sort();
+    const keys = Object.keys(localStorage).filter((k) => k.startsWith(prefix)).sort();
 
     const content =
       `# ${title}\n\n` +
       keys
         .map((k) => {
-          const field = k.slice(prefix.length);
-          const val = (localStorage.getItem(k) ?? "").trim();
-          return `## ${field}\n${val}`;
+          const section = k.slice(prefix.length);
+          const value = (localStorage.getItem(k) ?? "").trim();
+          return `## ${section}\n${value}`;
         })
         .join("\n\n");
 
     await navigator.clipboard.writeText(content);
-    alert("✅ Copié dans le presse-papiers");
+    alert("Copié dans le presse-papiers");
   }
 
   function clearAll() {
@@ -134,10 +131,9 @@ export default function SpecialDetail({
     window.location.reload();
   }
 
-  function resetField(fieldKey: string) {
-    localStorage.removeItem(storageKey(id, fieldKey));
-    window.location.reload();
-  }
+  /* =======================================================
+     Markdown components
+     ======================================================= */
 
   const mdComponents = useMemo(() => {
     if (!isPourquoi) return baseMdComponents;
@@ -145,64 +141,39 @@ export default function SpecialDetail({
     return {
       ...baseMdComponents,
 
-      // Supporte :::callout ... :::
-      // Ton cleanMd/mdComponents gère peut-être déjà ça. Si oui, tu peux supprimer cette partie.
-      p({ children }: any) {
-        // Détection du marqueur <!-- editable:xxx --> isolé en paragraphe
-        const raw = Array.isArray(children) ? children.join("") : String(children ?? "");
-        const m = raw.match(/editable:([a-z0-9_-]+)/i);
-        if (m) {
-          pendingEditableKey.current = m[1].toLowerCase();
+      /** Marker HTML fiable */
+      span({ node, ...props }: any) {
+        const key = node?.properties?.["data-editable"];
+        if (typeof key === "string") {
+          pendingEditableKey.current = key.toLowerCase();
           return null;
         }
-        return <p>{children}</p>;
+        return <span {...props} />;
       },
 
-      // Si ton parser remonte les commentaires HTML en tant que "html", on capture ici aussi
-      // (selon tes options react-markdown, ça peut varier)
-      // @ts-ignore
-      html({ value }: any) {
-        const m = String(value ?? "").match(/<!--\s*editable:([a-z0-9_-]+)\s*-->/i);
-        if (m) {
-          pendingEditableKey.current = m[1].toLowerCase();
-          return null;
-        }
-        return null;
-      },
-
-      // Blockquote : editable seulement si un marqueur "editable" vient juste avant
+      /** Blockquote → textarea si un marker a été vu juste avant */
       blockquote({ children }: any) {
         const fieldKey = pendingEditableKey.current;
         pendingEditableKey.current = null;
 
         if (!fieldKey) {
-          // Pas un champ => rendu normal (ex: citation ou encadré si tu veux)
           return <blockquote>{children}</blockquote>;
         }
 
-        const lsKey = storageKey(id, fieldKey);
-
         return (
           <EditableBlock
-            lsKey={lsKey}
+            lsKey={storageKey(id, fieldKey)}
             placeholder="Écrivez ici…"
-            locked={locked}
-            onReset={() => resetField(fieldKey)}
             rows={fieldKey === "pourquoi" ? 3 : 4}
           />
         );
       },
-
-      // Optionnel : si tu veux un vrai composant "callout" au lieu de blockquote
-      // Ici on laisse tes :::callout être gérés par ton système de cleanMd/mdComponents.
-      // Si tu n’as pas de support, dis-moi et je te donne un mini-parser très simple.
-      // @ts-ignore
-      div({ className, children }: any) {
-        if (className === "callout") return <Callout>{children}</Callout>;
-        return <div className={className}>{children}</div>;
-      },
     };
-  }, [isPourquoi, id, locked]);
+  }, [id, isPourquoi]);
+
+  /* =======================================================
+     Render
+     ======================================================= */
 
   return (
     <div style={{ maxWidth: 820, margin: "0 auto", padding: 16 }}>
@@ -224,35 +195,24 @@ export default function SpecialDetail({
 
       <Card title={title}>
         {loading ? (
-          <div style={{ opacity: 0.85 }}>Chargement…</div>
+          <div>Chargement…</div>
         ) : error ? (
-          <div style={{ opacity: 0.88, lineHeight: 1.35 }}>
-            <div style={{ fontWeight: 800, marginBottom: 6 }}>Erreur</div>
-            <div>{error}</div>
-            {page?.mdPath ? (
-              <div style={{ marginTop: 10, opacity: 0.75, fontSize: 12 }}>
-                Fichier : {page.mdPath}
-              </div>
-            ) : null}
-          </div>
+          <div>Erreur : {error}</div>
         ) : (
           <>
-            {isPourquoi ? (
+            {isPourquoi && (
               <div className="whyActions">
                 <button className="whyBtn" onClick={() => window.print()}>
                   Imprimer
                 </button>
                 <button className="whyBtn" onClick={exportToClipboard}>
-                  Exporter (copier)
-                </button>
-                <button className="whyBtn" onClick={() => setLocked((v) => !v)}>
-                  {locked ? "Déverrouiller" : "Verrouiller"}
+                  Exporter
                 </button>
                 <button className="whyBtn danger" onClick={clearAll}>
-                  Effacer tout
+                  Effacer
                 </button>
               </div>
-            ) : null}
+            )}
 
             <div className="md bodyText specialPage">
               <ReactMarkdown rehypePlugins={[rehypeRaw]} components={mdComponents}>

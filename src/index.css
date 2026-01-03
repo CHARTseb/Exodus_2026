@@ -523,4 +523,10 @@ h3 {
     resize: none;
     min-height: 0;
   }
+  
+  .whyTextarea[readonly] {
+  opacity: 0.9;
+  cursor: not-allowed;
+}
+
 }

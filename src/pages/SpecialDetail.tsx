@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import rehypeRaw from "rehype-raw";
 
@@ -6,49 +6,165 @@ import { Card } from "../components/Card";
 import { cleanMd, mdComponents as baseMdComponents } from "../utils/markdown";
 import { SPECIAL_PAGES, type SpecialId } from "../data/specials";
 
-/* =========================================================
-   Utils
-   ========================================================= */
-
-function storageKey(pageId: SpecialId, fieldKey: string) {
-  return `special:${pageId}:${fieldKey}`;
+/** Clé localStorage par champ */
+function lsKey(id: SpecialId, field: string) {
+  return `special:${id}:${field}`;
 }
 
-/* =========================================================
-   Editable block
-   ========================================================= */
+function useLocalField(key: string) {
+  const [value, setValue] = useState(() => localStorage.getItem(key) ?? "");
+  useEffect(() => {
+    localStorage.setItem(key, value);
+  }, [key, value]);
+  return [value, setValue] as const;
+}
 
-function EditableBlock({
-  lsKey,
-  placeholder,
-  rows = 4,
-}: {
-  lsKey: string;
-  placeholder?: string;
-  rows?: number;
-}) {
-  const [value, setValue] = useState<string>(() => localStorage.getItem(lsKey) ?? "");
+/** Formulaire dédié à "Votre Pourquoi" + verrouillage */
+function WhyForm({ id, title }: { id: SpecialId; title: string }) {
+  const [dependance, setDependance] = useLocalField(lsKey(id, "dependance"));
+  const [personnes, setPersonnes] = useLocalField(lsKey(id, "personnes"));
+  const [service, setService] = useLocalField(lsKey(id, "service"));
+  const [plan, setPlan] = useLocalField(lsKey(id, "plan"));
+  const [pourquoi, setPourquoi] = useLocalField(lsKey(id, "pourquoi"));
+
+  // ✅ Verrouillage persistant
+  const lockStorage = `ui:locked:${id}`;
+  const [locked, setLocked] = useState<boolean>(() => localStorage.getItem(lockStorage) === "1");
 
   useEffect(() => {
-    localStorage.setItem(lsKey, value);
-  }, [lsKey, value]);
+    localStorage.setItem(lockStorage, locked ? "1" : "0");
+  }, [lockStorage, locked]);
+
+  async function exportToClipboard() {
+    const content = `# ${title}
+
+## dependance
+${dependance.trim()}
+
+## personnes
+${personnes.trim()}
+
+## service
+${service.trim()}
+
+## plan
+${plan.trim()}
+
+## pourquoi
+${pourquoi.trim()}
+`;
+    await navigator.clipboard.writeText(content);
+    alert("Copié dans le presse-papiers");
+  }
+
+  function clearAll() {
+    ["dependance", "personnes", "service", "plan", "pourquoi"].forEach((f) =>
+      localStorage.removeItem(lsKey(id, f))
+    );
+    window.location.reload();
+  }
 
   return (
-    <div className="whyField">
-      <textarea
-        className="whyTextarea"
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        placeholder={placeholder}
-        rows={rows}
-      />
-    </div>
+    <>
+      <div className="whyActions">
+        <button className="whyBtn" onClick={() => window.print()}>
+          Imprimer
+        </button>
+        <button className="whyBtn" onClick={exportToClipboard}>
+          Exporter
+        </button>
+        <button className="whyBtn" onClick={() => setLocked((v) => !v)}>
+          {locked ? "Déverrouiller" : "Verrouiller"}
+        </button>
+        <button className="whyBtn danger" onClick={clearAll}>
+          Effacer
+        </button>
+      </div>
+
+      <h2>Écrivez votre pourquoi</h2>
+
+      <p>
+        Prenez un moment seul, sans vous presser.
+        <br />
+        Écrivez simplement, avec des mots vrais.
+      </p>
+
+      <h3>Ma dépendance / mon attachement principal</h3>
+      <div className="whyField">
+        <textarea
+          className="whyTextarea"
+          value={dependance}
+          onChange={(e) => setDependance(e.target.value)}
+          placeholder="Exemple : téléphone, nourriture, contrôle, pornographie, confort…"
+          rows={3}
+          readOnly={locked}
+        />
+      </div>
+
+      <hr />
+
+      <h3>Les personnes pour lesquelles je veux être libre</h3>
+      <div className="whyField">
+        <textarea
+          className="whyTextarea"
+          value={personnes}
+          onChange={(e) => setPersonnes(e.target.value)}
+          placeholder="Exemple : mon épouse, mes enfants, ma fiancée, mes frères, une personne confiée…"
+          rows={3}
+          readOnly={locked}
+        />
+      </div>
+
+      <hr />
+
+      <h3>Comment ma liberté les servira concrètement</h3>
+      <div className="whyField">
+        <textarea
+          className="whyTextarea"
+          value={service}
+          onChange={(e) => setService(e.target.value)}
+          placeholder="Exemple : plus de présence, plus d’écoute, plus de patience, plus de disponibilité…"
+          rows={3}
+          readOnly={locked}
+        />
+      </div>
+
+      <hr />
+
+      <h3>Comment cette liberté m’aidera à accomplir le plan de Dieu</h3>
+      <div className="whyField">
+        <textarea
+          className="whyTextarea"
+          value={plan}
+          onChange={(e) => setPlan(e.target.value)}
+          placeholder="Exemple : être un homme fidèle, un père juste, un disciple disponible…"
+          rows={3}
+          readOnly={locked}
+        />
+      </div>
+
+      <hr />
+
+      <h3>Mon POURQUOI (en une ou deux phrases)</h3>
+      <div className="whyField">
+        <textarea
+          className="whyTextarea"
+          value={pourquoi}
+          onChange={(e) => setPourquoi(e.target.value)}
+          placeholder="« Je veux être libre de … afin de … pour … »"
+          rows={2}
+          readOnly={locked}
+        />
+      </div>
+
+      {locked ? (
+        <p style={{ opacity: 0.75, marginTop: 8 }}>
+          Verrouillé : cliquez sur « Déverrouiller » pour modifier.
+        </p>
+      ) : null}
+    </>
   );
 }
-
-/* =========================================================
-   Page
-   ========================================================= */
 
 export default function SpecialDetail({
   id,
@@ -59,19 +175,11 @@ export default function SpecialDetail({
 }) {
   const page = useMemo(() => SPECIAL_PAGES.find((p) => p.id === id), [id]);
   const title = page?.title ?? "Page spéciale";
-
   const isPourquoi = id === "pourquoi";
 
   const [md, setMd] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-
-  /** Marqueur détecté avant le prochain blockquote */
-  const pendingEditableKey = useRef<string | null>(null);
-
-  /* =======================================================
-     Load markdown
-     ======================================================= */
 
   useEffect(() => {
     let cancelled = false;
@@ -79,13 +187,12 @@ export default function SpecialDetail({
     async function load() {
       setLoading(true);
       setError(null);
+      setMd("");
 
       try {
         if (!page?.mdPath) throw new Error("mdPath manquant.");
-
         const res = await fetch(page.mdPath);
-        if (!res.ok) throw new Error(`Erreur HTTP ${res.status}`);
-
+        if (!res.ok) throw new Error(`Impossible de charger ${page.mdPath} (HTTP ${res.status})`);
         const text = await res.text();
         if (!cancelled) setMd(text);
       } catch (e: any) {
@@ -101,79 +208,13 @@ export default function SpecialDetail({
     };
   }, [page]);
 
-  /* =======================================================
-     Export
-     ======================================================= */
-
-  async function exportToClipboard() {
-    const prefix = `special:${id}:`;
-    const keys = Object.keys(localStorage).filter((k) => k.startsWith(prefix)).sort();
-
-    const content =
-      `# ${title}\n\n` +
-      keys
-        .map((k) => {
-          const section = k.slice(prefix.length);
-          const value = (localStorage.getItem(k) ?? "").trim();
-          return `## ${section}\n${value}`;
-        })
-        .join("\n\n");
-
-    await navigator.clipboard.writeText(content);
-    alert("Copié dans le presse-papiers");
-  }
-
-  function clearAll() {
-    const prefix = `special:${id}:`;
-    Object.keys(localStorage)
-      .filter((k) => k.startsWith(prefix))
-      .forEach((k) => localStorage.removeItem(k));
-    window.location.reload();
-  }
-
-  /* =======================================================
-     Markdown components
-     ======================================================= */
-
-  const mdComponents = useMemo(() => {
-    if (!isPourquoi) return baseMdComponents;
-
-    return {
-      ...baseMdComponents,
-
-      /** Marker HTML fiable */
-      span({ node, ...props }: any) {
-        const key = node?.properties?.["data-editable"];
-        if (typeof key === "string") {
-          pendingEditableKey.current = key.toLowerCase();
-          return null;
-        }
-        return <span {...props} />;
-      },
-
-      /** Blockquote → textarea si un marker a été vu juste avant */
-      blockquote({ children }: any) {
-        const fieldKey = pendingEditableKey.current;
-        pendingEditableKey.current = null;
-
-        if (!fieldKey) {
-          return <blockquote>{children}</blockquote>;
-        }
-
-        return (
-          <EditableBlock
-            lsKey={storageKey(id, fieldKey)}
-            placeholder="Écrivez ici…"
-            rows={fieldKey === "pourquoi" ? 3 : 4}
-          />
-        );
-      },
-    };
-  }, [id, isPourquoi]);
-
-  /* =======================================================
-     Render
-     ======================================================= */
+  // On rend seulement l'intro du markdown sur "Pourquoi"
+  const mdIntro = useMemo(() => {
+    if (!isPourquoi) return md;
+    const marker = "## Écrivez votre pourquoi";
+    const idx = md.indexOf(marker);
+    return idx >= 0 ? md.slice(0, idx).trim() : md;
+  }, [md, isPourquoi]);
 
   return (
     <div style={{ maxWidth: 820, margin: "0 auto", padding: 16 }}>
@@ -199,27 +240,13 @@ export default function SpecialDetail({
         ) : error ? (
           <div>Erreur : {error}</div>
         ) : (
-          <>
-            {isPourquoi && (
-              <div className="whyActions">
-                <button className="whyBtn" onClick={() => window.print()}>
-                  Imprimer
-                </button>
-                <button className="whyBtn" onClick={exportToClipboard}>
-                  Exporter
-                </button>
-                <button className="whyBtn danger" onClick={clearAll}>
-                  Effacer
-                </button>
-              </div>
-            )}
+          <div className="md bodyText specialPage">
+            <ReactMarkdown rehypePlugins={[rehypeRaw]} components={baseMdComponents}>
+              {cleanMd(mdIntro)}
+            </ReactMarkdown>
 
-            <div className="md bodyText specialPage">
-              <ReactMarkdown rehypePlugins={[rehypeRaw]} components={mdComponents}>
-                {cleanMd(md)}
-              </ReactMarkdown>
-            </div>
-          </>
+            {isPourquoi ? <WhyForm id={id} title={title} /> : null}
+          </div>
         )}
       </Card>
     </div>

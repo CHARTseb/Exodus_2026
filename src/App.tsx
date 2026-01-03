@@ -198,24 +198,6 @@ export default function App() {
               Pages spéciales
             </button>
 
-            {/* Raccourcis pages spéciales */}
-            <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
-              Raccourcis
-            </div>
-
-            {SPECIAL_PAGES.map((p) => (
-              <button
-                key={p.id}
-                style={{
-                  ...styles.menuItem,
-                  ...(specialId === p.id ? styles.menuActive : {}),
-                }}
-                onClick={() => openSpecial(tab, p.id)}
-              >
-                {p.title}
-              </button>
-            ))}
-
             {/* Thème */}
             <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
               Thème

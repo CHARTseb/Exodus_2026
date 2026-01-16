@@ -22,10 +22,4 @@ export default function Specials({
           style={{ cursor: "pointer" }}
         >
           <Card title={p.title}>
-            {/* Plus de "Ouvrir →" */}
-          </Card>
-        </div>
-      ))}
-    </div>
-  );
-}
+            {/* children requis par Card, mais on n'affi*

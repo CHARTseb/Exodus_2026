@@ -69,6 +69,18 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
 
 ---
 
+## Sanctuaire Sainte-Rita – Vendeville
+
+📍 [Sanctuaire Sainte-Rita – Vendeville](https://www.google.com/maps/search/?api=1&query=Sanctuaire+Sainte+Rita+Vendeville)
+
+- Adoration du Saint Sacrement :
+  - Du lundi au vendredi : 17h00 – 19h00  
+  - Vendredi : 15h00 – 16h00  
+  - Samedi : 17h00 – 17h40  
+  - Dimanche : 16h00 – 16h40
+
+---
+
 ## Couvent des Dominicains – Lille
 
 📍 [Couvent des Dominicains – Lille](https://www.google.com/maps/search/?api=1&query=Couvent+des+Dominicains+Lille)

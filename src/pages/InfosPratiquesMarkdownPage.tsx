@@ -3,13 +3,10 @@ import ReactMarkdown from "react-markdown";
 
 export type InfoId = "messes-semaines" | "confessions" | "adoration";
 
-const LOADERS: Record<InfoId, () => Promise<string>> = {
-  "messes-semaines": async () =>
-    (await import("../content/infos-pratiques/messes-semaines.md?raw")).default,
-  confessions: async () =>
-    (await import("../content/infos-pratiques/confessions.md?raw")).default,
-  adoration: async () =>
-    (await import("../content/infos-pratiques/adoration.md?raw")).default,
+const PATHS: Record<InfoId, string> = {
+  "messes-semaines": "/specials/messes-semaines.md",
+  confessions: "/specials/confessions.md",
+  adoration: "/specials/adoration.md",
 };
 
 export default function InfosPratiquesMarkdownPage(props: {
@@ -17,10 +14,28 @@ export default function InfosPratiquesMarkdownPage(props: {
   onBack: () => void;
 }) {
   const [md, setMd] = useState("");
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     let mounted = true;
-    LOADERS[props.id]().then((txt) => mounted && setMd(txt));
+    setError(null);
+    setMd("");
+
+    fetch(PATHS[props.id])
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`HTTP ${res.status} – ${PATHS[props.id]}`);
+        }
+        return res.text();
+      })
+      .then((txt) => {
+        if (mounted) setMd(txt);
+      })
+      .catch((e: unknown) => {
+        if (!mounted) return;
+        setError(e instanceof Error ? e.message : "Erreur de chargement");
+      });
+
     return () => {
       mounted = false;
     };
@@ -44,7 +59,24 @@ export default function InfosPratiquesMarkdownPage(props: {
         ← Retour
       </button>
 
-      <ReactMarkdown>{md}</ReactMarkdown>
+      {error ? (
+        <div
+          style={{
+            border: "1px solid var(--border)",
+            background: "var(--card)",
+            color: "var(--text)",
+            borderRadius: 14,
+            padding: 12,
+          }}
+        >
+          <div style={{ fontWeight: 900, marginBottom: 6 }}>
+            Impossible de charger la page
+          </div>
+          <div style={{ opacity: 0.85, fontSize: 13 }}>{error}</div>
+        </div>
+      ) : (
+        <ReactMarkdown>{md}</ReactMarkdown>
+      )}
     </div>
   );
 }

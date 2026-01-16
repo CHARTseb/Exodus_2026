@@ -22,9 +22,7 @@ export default function Specials({
           style={{ cursor: "pointer" }}
         >
           <Card title={p.title}>
-            <div style={{ opacity: 0.85, lineHeight: 1.35 }}>
-              Ouvrir →
-            </div>
+            {/* Plus de "Ouvrir →" */}
           </Card>
         </div>
       ))}

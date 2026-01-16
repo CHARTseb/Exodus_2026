@@ -9,10 +9,10 @@ Les horaires peuvent varier : n’hésitez pas à appeler la paroisse ou à dema
 
 📍 [Église Saint-Nicolas – Wasquehal](https://www.google.com/maps/search/?api=1&query=Église+Saint-Nicolas+Wasquehal)
 
-- **Après chaque messe :** confessions possibles en fonction de la demande
-- **Semaine :** messe à 19h (confessions possibles après)
-- **Mardi :** messe à 08h (confessions possibles après)
-- **Dimanche :** de 10h30 à 11h
+- Après chaque messe : confessions possibles en fonction de la demande
+- Semaine : messe à 19h (confessions possibles après)
+- Mardi : messe à 08h (confessions possibles après)
+- Dimanche : de 10h30 à 11h
 
 ---
 
@@ -21,8 +21,8 @@ Les horaires peuvent varier : n’hésitez pas à appeler la paroisse ou à dema
 📍 [Église Saint-Sébastien – Villeneuve d’Ascq](https://www.google.com/maps/search/?api=1&query=Église+Saint-Sébastien+Villeneuve+d’Ascq)  
 Place de la République – Villeneuve d’Ascq
 
-- **Mercredi :** 18h00 – 19h00
-- **Vendredi :** 18h00 – 19h00
+- Mercredi : 18h00 – 19h00
+- Vendredi : 18h00 – 19h00
 
 ---
 
@@ -30,7 +30,7 @@ Place de la République – Villeneuve d’Ascq
 
 📍 [Église de Marcq-en-Barœul](https://www.google.com/maps/search/?api=1&query=Église+Marcq-en-Barœul)
 
-- **30 minutes avant la messe :** possibilité de venir pour recevoir le sacrement de réconciliation
+- 30 minutes avant la messe : possibilité de venir pour recevoir le sacrement de réconciliation
 
 ---
 
@@ -39,8 +39,8 @@ Place de la République – Villeneuve d’Ascq
 📍 [Église Saint-Maurice – Lille Centre](https://www.google.com/maps/search/?api=1&query=Église+Saint-Maurice+Lille+rue+Pierre+Mauroy)  
 Rue Pierre Mauroy – Lille
 
-- **Lundi → vendredi :** 15h30 – 17h45
-- **Samedi :** 13h00 – 17h45
+- Lundi → vendredi : 15h30 – 17h45
+- Samedi : 13h00 – 17h45
 
 ---
 
@@ -48,4 +48,4 @@ Rue Pierre Mauroy – Lille
 
 📍 [Université Catholique de Lille](https://www.google.com/maps/search/?api=1&query=Université+Catholique+de+Lille)
 
-- **Contact :** +32 499 42 20 25
+- Contact : +32 499 42 20 25

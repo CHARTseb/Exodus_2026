@@ -15,7 +15,8 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
   - Mercredi : 07h00 – 24h00  
   - Jeudi : 07h00 – 24h00  
   - Vendredi : 07h00 – 16h00  
-(*exposition régulière, équipes d’adoration sur place*) :contentReference[oaicite:1]{index=1}
+(*exposition régulière, équipes d’adoration sur place*)
+(*Code porte chapelle : 2014A*)
 
 ---
 
@@ -26,7 +27,7 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
 - Temps d’adoration au Saint Sacrement à l’église :  
   - Mercredi : 18h00 – 19h00  
   - Vendredi : 18h00 – 19h00  
-(*selon calendrier paroissial et périodes liturgiques*) :contentReference[oaicite:2]{index=2}
+(*selon calendrier paroissial et périodes liturgiques*)
 
 ---
 
@@ -40,7 +41,7 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
   - Mercredi : 07h00 – 20h00  
   - Jeudi : 07h00 – 23h00  
   - Vendredi : 19h00 – 22h00  
-(*horaires indiqués par la paroisse de Villeneuve d’Ascq*) :contentReference[oaicite:3]{index=3}
+(*horaires indiqués par la paroisse de Villeneuve d’Ascq*)
 
 ---
 
@@ -50,7 +51,7 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
 
 - Adoration perpétuelle du Saint Sacrement :  
   - 24h/24, 7j/7 (chapelle d’adoration continue, code d’entrée à demander)  
-(*contacter la paroisse pour modalités d’accès*) :contentReference[oaicite:4]{index=4}
+(*contacter la paroisse pour modalités d’accès*)
 
 ---
 
@@ -64,7 +65,7 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
   - Saint-Étienne : jeudi 18h30 – 19h30  
   - Sacré-Cœur : vendredi 19h00 – 20h30  
   - Notre-Dame de Fives : vendredi 18h00  
-(*horaires fournis par le diocèse de Lille, sujets à confirmation locale*) :contentReference[oaicite:5]{index=5}
+(*horaires fournis par le diocèse de Lille, sujets à confirmation locale*)
 
 ---
 
@@ -76,10 +77,10 @@ Voici les lieux et horaires connus autour de Wasquehal, Villeneuve-d’Ascq, Lil
   - Offices des Laudes : 07h40 – 08h20 (semaine)  
   - Eucharistie : 12h00 – 12h30  
   - Vêpres : 19h00 – 19h20  
-(*temps de prière liturgiques propices à l’adoration silencieuse*) :contentReference[oaicite:6]{index=6}
+(*temps de prière liturgiques propices à l’adoration silencieuse*) 
 
 ---
 
 💡 **À noter** :  
 - Les horaires d’adoration peuvent varier selon les saisons, périodes liturgiques, ou disponibilités locales. Nous te recommandons de **vérifier directement auprès des paroisses** avant de te déplacer.  
-- À Lille, l’adoration perpétuelle à Notre-Dame de Consolation demande parfois un **code d’accès ou contact local** pour l’entrée de la chapelle. :contentReference[oaicite:7]{index=7}
+- À Lille, l’adoration perpétuelle à Notre-Dame de Consolation demande parfois un **code d’accès ou contact local** pour l’entrée de la chapelle.

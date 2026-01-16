@@ -100,3 +100,12 @@ Pensez à vérifier les informations auprès de la paroisse si nécessaire.
 
 - En semaine : 12h00 – 12h30  
 - Dimanche : 11h00 – 12h00
+
+---
+
+## Sanctuaire Sainte-Rita – Vendeville
+
+📍 [Sanctuaire Sainte-Rita – Vendeville](https://www.google.com/maps/search/?api=1&query=Sanctuaire+Sainte+Rita+Vendeville)
+
+- Du lundi au vendredi : 11h00 et 19h00
+- Samedi : 11h00

@@ -57,3 +57,13 @@ Rue Pierre Mauroy – Lille
 📍 [Université Catholique de Lille](https://www.google.com/maps/search/?api=1&query=Université+Catholique+de+Lille)
 
 - Contact : +32 499 42 20 25
+
+---
+
+## Sanctuaire Sainte-Rita – Vendeville
+
+📍 [Sanctuaire Sainte-Rita – Vendeville](https://www.google.com/maps/search/?api=1&query=Sanctuaire+Sainte+Rita+Vendeville)
+
+- Du lundi au vendredi : 17h00 – 18h30
+- Samedi : 17h00 – 17h40
+- Dimanche : 17h00 – 18h00

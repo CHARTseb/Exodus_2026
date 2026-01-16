@@ -5,10 +5,11 @@ import DayDetail from "./pages/DayDetail";
 import Specials from "./pages/Specials";
 import SpecialDetail from "./pages/SpecialDetail";
 import Notebook from "./pages/Notebook";
-import InfosPratiques from "./pages/InfosPratiquesHome";
-import InfoDetail from "./pages/InfoDetail";
+import InfosPratiquesHome from "./pages/InfosPratiquesHome";
+import InfosPratiquesMarkdownPage, {
+  type InfoId,
+} from "./pages/InfosPratiquesMarkdownPage";
 import type { SpecialId } from "./data/specials";
-import type { InfoId } from "./pages/InfoDetail";
 import "./App.css";
 
 /* =========================
@@ -152,6 +153,7 @@ export default function App() {
           <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
             <div style={{ fontWeight: 900, marginBottom: 10 }}>Menu</div>
 
+            {/* Navigation principale */}
             <button
               style={{
                 ...styles.menuItem,
@@ -279,7 +281,7 @@ export default function App() {
         ) : specialId ? (
           <SpecialDetail id={specialId} onBack={goBackSpecial} />
         ) : infoId ? (
-          <InfoDetail id={infoId} onBack={goBackInfo} />
+          <InfosPratiquesMarkdownPage id={infoId} onBack={goBackInfo} />
         ) : tab === "today" ? (
           <Today onOpenDetail={(id) => openDetail("today", id)} />
         ) : tab === "all" ? (
@@ -287,7 +289,7 @@ export default function App() {
         ) : tab === "notebook" ? (
           <Notebook onOpenDetail={(id) => openDetail("notebook", id)} />
         ) : tab === "infos" ? (
-          <InfosPratiques onOpen={(id) => openInfo("infos", id)} />
+          <InfosPratiquesHome onOpen={(id) => openInfo("infos", id)} />
         ) : (
           <Specials onOpen={(id) => openSpecial("special", id)} />
         )}
@@ -313,6 +315,7 @@ const styles: Record<string, React.CSSProperties> = {
     objectPosition: "center 20%",
     display: "block",
   },
+
   topBar: {
     display: "flex",
     alignItems: "center",
@@ -329,6 +332,7 @@ const styles: Record<string, React.CSSProperties> = {
     color: "white",
     fontWeight: 900,
     fontSize: 18,
+    letterSpacing: 0.2,
   },
   burgerBtn: {
     border: "1px solid var(--border)",
@@ -339,7 +343,9 @@ const styles: Record<string, React.CSSProperties> = {
     cursor: "pointer",
     fontWeight: 900,
     fontSize: 18,
+    lineHeight: 1,
   },
+
   overlay: {
     position: "fixed",
     inset: 0,

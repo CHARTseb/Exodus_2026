@@ -44,6 +44,14 @@ Rue Pierre Mauroy – Lille
 
 ---
 
+## Couvent des Dominicains – Lille
+
+📍 [Couvent des Dominicains – Lille](https://www.google.com/maps/search/?api=1&query=Couvent+des+Dominicains+Lille)
+
+- En semaine : 11h00 – 12h00
+
+---
+
 ## Sur rendez-vous – Père Benoît de Baenst (La Catho)
 
 📍 [Université Catholique de Lille](https://www.google.com/maps/search/?api=1&query=Université+Catholique+de+Lille)

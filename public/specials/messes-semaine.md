@@ -90,3 +90,13 @@ Pensez à vérifier les informations auprès de la paroisse si nécessaire.
 📍 [Église Saint-Étienne – Lille](https://www.google.com/maps/search/?api=1&query=Église+Saint-Étienne+Lille)
 
 - Jeudi : 18h00
+
+---
+
+## Couvent des Dominicains – Lille
+
+### Couvent des Dominicains
+📍 [Couvent des Dominicains – Lille](https://www.google.com/maps/search/?api=1&query=Couvent+des+Dominicains+Lille)
+
+- En semaine : 12h00 – 12h30  
+- Dimanche : 11h00 – 12h00

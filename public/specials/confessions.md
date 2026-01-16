@@ -10,8 +10,8 @@ Les horaires peuvent varier : n’hésitez pas à appeler la paroisse ou à dema
 📍 [Église Saint-Nicolas – Wasquehal](https://www.google.com/maps/search/?api=1&query=Église+Saint-Nicolas+Wasquehal)
 
 - Après chaque messe : confessions possibles en fonction de la demande
-- Semaine : messe à 19h (confessions possibles après)
-- Mardi : messe à 08h (confessions possibles après)
+- Jeudi et vendredi : messe à 18h30 (confessions possibles après)
+- Mardi : messe à 07h30 (confessions possibles après)
 - Dimanche : de 10h30 à 11h
 
 ---

@@ -1,11 +1,7 @@
 import { Card } from "../components/Card";
 import { SPECIAL_PAGES, type SpecialId } from "../data/specials";
 
-export default function Specials({
-  onOpen,
-}: {
-  onOpen: (id: SpecialId) => void;
-}) {
+export default function Specials({ onOpen }: { onOpen: (id: SpecialId) => void }) {
   return (
     <div style={{ maxWidth: 820, margin: "0 auto", padding: 16 }}>
       <h1 style={{ marginTop: 0 }}>Pages spéciales</h1>
@@ -21,5 +17,9 @@ export default function Specials({
           }}
           style={{ cursor: "pointer" }}
         >
-          <Card title={p.title}>
-            {/* children requis par Card, mais on n'affi*
+          <Card title={p.title}>{" "}</Card>
+        </div>
+      ))}
+    </div>
+  );
+}

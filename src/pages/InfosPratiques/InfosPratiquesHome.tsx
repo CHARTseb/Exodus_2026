@@ -1,21 +1,19 @@
-import { Link } from "react-router-dom";
+import type { InfoId } from "../InfoDetail";
 
-export function InfosPratiquesHome() {
+export function InfosPratiquesHome(props: { onOpen: (id: InfoId) => void }) {
   return (
     <div className="page">
       <h1>Infos pratiques</h1>
 
-      <ul>
-        <li>
-          <Link to="/infos-pratiques/messes-semaine">Messes de semaine</Link>
-        </li>
-        <li>
-          <Link to="/infos-pratiques/confessions">Confessions</Link>
-        </li>
-        <li>
-          <Link to="/infos-pratiques/adoration">Adoration du Saint Sacrement</Link>
-        </li>
-      </ul>
+      <button onClick={() => props.onOpen("messes-semaines")}>
+        Messes de semaine
+      </button>
+
+      <button onClick={() => props.onOpen("confessions")}>Confessions</button>
+
+      <button onClick={() => props.onOpen("adoration")}>
+        Adoration du Saint Sacrement
+      </button>
     </div>
   );
 }

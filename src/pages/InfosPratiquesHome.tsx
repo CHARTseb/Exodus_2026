@@ -5,7 +5,7 @@ export default function InfosPratiquesHome(props: {
 }) {
   return (
     <div>
-      <button style={itemStyle} onClick={() => props.onOpen("messes-semaines")}>
+      <button style={itemStyle} onClick={() => props.onOpen("messes-semaine")}>
         Messes de semaine
       </button>
 

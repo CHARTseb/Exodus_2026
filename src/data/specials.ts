@@ -7,8 +7,6 @@ export type SpecialId =
   | "pourquoi"
   | "guide-reunions"
   | "examen-conscience"
-  | "messes-semaine"
-  | "confessions";
   
 
 export type SpecialPage = {
@@ -24,8 +22,6 @@ export const SPECIAL_PAGES: SpecialPage[] = [
   { id: "heure-sainte", title: "Prier une heure sainte", mdPath: "/specials/heure-sainte.md" },
   { id: "asceses", title: "Les Ascèses", mdPath: "/specials/asceses.md" },
   { id: "fraternite", title: "La Fraternité", mdPath: "/specials/fraternite.md" },
-  { id: "messes-semaine", title: "Messes de semaine", mdPath: "/specials/messes-semaine.md" },
-  { id: "confessions", title: "Confessions", mdPath: "/specials/confessions.md" },
 
 
   // ✅ Page maintenant active

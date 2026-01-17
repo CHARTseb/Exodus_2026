@@ -37,24 +37,29 @@ function applyTheme(mode: ThemeMode) {
 }
 
 /* =========================
-   Taille du texte
+   Taille du texte (UI scale)
    ========================= */
 
 function getSavedFontSize(): FontSize {
   const v = localStorage.getItem("fontSize");
-  return v === "small" || v === "normal" || v === "large" || v === "xlarge"
+  return v === "small" || v === "large" || v === "xlarge" || v === "normal"
     ? v
     : "normal";
 }
 
 function applyFontSize(size: FontSize) {
   const scale =
-    size === "small" ? 0.9 : size === "large" ? 1.15 : size === "xlarge" ? 1.3 : 1;
+    size === "small"
+      ? 0.9
+      : size === "large"
+      ? 1.15
+      : size === "xlarge"
+      ? 1.3
+      : 1;
 
   document.documentElement.style.setProperty("--ui-scale", String(scale));
   localStorage.setItem("fontSize", size);
 }
-
 
 /* =========================
    App
@@ -64,24 +69,19 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("today");
   const [menuOpen, setMenuOpen] = useState(false);
 
-  // Détail jour
   const [detailId, setDetailId] = useState<number | null>(null);
   const [backTab, setBackTab] = useState<Tab>("today");
 
-  // Pages spéciales
   const [specialId, setSpecialId] = useState<SpecialId | null>(null);
   const [specialBackTab, setSpecialBackTab] = useState<Tab>("today");
 
-  // Infos pratiques
   const [infoId, setInfoId] = useState<InfoId | null>(null);
   const [infoBackTab, setInfoBackTab] = useState<Tab>("today");
 
-  // Thème
   const [theme, setTheme] = useState<ThemeMode>(() =>
     typeof window === "undefined" ? "auto" : getSavedTheme()
   );
 
-  // Taille texte
   const [fontSize, setFontSize] = useState<FontSize>(() =>
     typeof window === "undefined" ? "normal" : getSavedFontSize()
   );
@@ -104,11 +104,6 @@ export default function App() {
     setMenuOpen(false);
   }
 
-  function goBackDay() {
-    setDetailId(null);
-    setTab(backTab);
-  }
-
   function openSpecial(from: Tab, id: SpecialId) {
     setSpecialBackTab(from);
     setTab("special");
@@ -116,21 +111,11 @@ export default function App() {
     setMenuOpen(false);
   }
 
-  function goBackSpecial() {
-    setSpecialId(null);
-    setTab(specialBackTab);
-  }
-
   function openInfo(from: Tab, id: InfoId) {
     setInfoBackTab(from);
     setTab("infos");
     setInfoId(id);
     setMenuOpen(false);
-  }
-
-  function goBackInfo() {
-    setInfoId(null);
-    setTab(infoBackTab);
   }
 
   /* =========================
@@ -159,187 +144,61 @@ export default function App() {
 
   return (
     <div style={{ minHeight: "100vh", background: "var(--bg)" }}>
-      {/* Bandeau */}
-      <div style={styles.bannerWrap}>
-        <img src="/banner.jpg" alt="Exodus" style={styles.bannerImg} />
-      </div>
-
-      {/* Top bar */}
       <header style={styles.topBar}>
         <div style={styles.topTitle}>{topTitle}</div>
-
         <button
           onClick={() => setMenuOpen((v) => !v)}
           style={styles.burgerBtn}
-          aria-label="Ouvrir le menu"
         >
           ☰
         </button>
       </header>
 
-      {/* Menu burger */}
       {menuOpen && (
         <div style={styles.overlay} onClick={() => setMenuOpen(false)}>
           <div style={styles.drawer} onClick={(e) => e.stopPropagation()}>
-            <div style={{ fontWeight: 900, marginBottom: 10 }}>Menu</div>
-
-            {/* Navigation principale */}
-            <button
-              style={{
-                ...styles.menuItem,
-                ...(tab === "today" && !detailId && !specialId && !infoId
-                  ? styles.menuActive
-                  : {}),
-              }}
-              onClick={() => {
-                setDetailId(null);
-                setSpecialId(null);
-                setInfoId(null);
-                setTab("today");
-                setMenuOpen(false);
-              }}
-            >
+            <button style={styles.menuItem} onClick={() => setTab("today")}>
               Aujourd’hui
             </button>
-
-            <button
-              style={{
-                ...styles.menuItem,
-                ...(tab === "all" && !detailId && !specialId && !infoId
-                  ? styles.menuActive
-                  : {}),
-              }}
-              onClick={() => {
-                setDetailId(null);
-                setSpecialId(null);
-                setInfoId(null);
-                setTab("all");
-                setMenuOpen(false);
-              }}
-            >
+            <button style={styles.menuItem} onClick={() => setTab("all")}>
               Tous les jours
             </button>
-
-            <button
-              style={{
-                ...styles.menuItem,
-                ...(tab === "notebook" && !detailId && !specialId && !infoId
-                  ? styles.menuActive
-                  : {}),
-              }}
-              onClick={() => {
-                setDetailId(null);
-                setSpecialId(null);
-                setInfoId(null);
-                setTab("notebook");
-                setMenuOpen(false);
-              }}
-            >
+            <button style={styles.menuItem} onClick={() => setTab("notebook")}>
               Mon carnet
             </button>
-
-            <button
-              style={{
-                ...styles.menuItem,
-                ...(tab === "infos" && !detailId && !specialId && !infoId
-                  ? styles.menuActive
-                  : {}),
-              }}
-              onClick={() => {
-                setDetailId(null);
-                setSpecialId(null);
-                setInfoId(null);
-                setTab("infos");
-                setMenuOpen(false);
-              }}
-            >
+            <button style={styles.menuItem} onClick={() => setTab("infos")}>
               Infos pratiques
             </button>
-
-            <button
-              style={{
-                ...styles.menuItem,
-                ...(tab === "special" && !detailId && !specialId && !infoId
-                  ? styles.menuActive
-                  : {}),
-              }}
-              onClick={() => {
-                setDetailId(null);
-                setSpecialId(null);
-                setInfoId(null);
-                setTab("special");
-                setMenuOpen(false);
-              }}
-            >
+            <button style={styles.menuItem} onClick={() => setTab("special")}>
               Pages spéciales
             </button>
 
-            {/* Thème */}
-            <div style={{ marginTop: 10, fontWeight: 900, opacity: 0.9 }}>
-              Thème
-            </div>
+            <div style={{ marginTop: 14, fontWeight: 900 }}>Taille du texte</div>
 
-            <div style={{ display: "flex", gap: 8, marginTop: 10 }}>
-              {(["auto", "dark", "light"] as ThemeMode[]).map((m) => (
-                <button
-                  key={m}
-                  style={{
-                    ...styles.menuItem,
-                    marginBottom: 0,
-                    flex: 1,
-                    textAlign: "center",
-                    ...(theme === m ? styles.menuActive : {}),
-                  }}
-                  onClick={() => setTheme(m)}
-                >
-                  {m === "auto" ? "Auto" : m === "dark" ? "Sombre" : "Clair"}
-                </button>
-              ))}
-            </div>
-
-            {/* Taille du texte */}
-            <div style={{ marginTop: 14, fontWeight: 900, opacity: 0.9 }}>
-              Taille du texte
-            </div>
-
-            <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
-              {([
-                { id: "small", label: "Petit" },
-                { id: "normal", label: "Normal" },
-                { id: "large", label: "Grand" },
-                { id: "xlarge", label: "Très grand" },
-              ] as { id: FontSize; label: string }[]).map((opt) => (
-                <button
-                  key={opt.id}
-                  style={{
-                    ...styles.menuItem,
-                    marginBottom: 0,
-                    flex: 1,
-                    textAlign: "center",
-                    ...(fontSize === opt.id ? styles.menuActive : {}),
-                  }}
-                  onClick={() => setFontSize(opt.id)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-
-            <div style={{ marginTop: 14, opacity: 0.7, fontSize: 12 }}>
-              Exodus PWA
-            </div>
+            <select
+              value={fontSize}
+              onChange={(e) => setFontSize(e.target.value as FontSize)}
+              style={styles.select}
+            >
+              <option value="small">Petit</option>
+              <option value="normal">Normal</option>
+              <option value="large">Grand</option>
+              <option value="xlarge">Très grand</option>
+            </select>
           </div>
         </div>
       )}
 
-      {/* Contenu */}
       <main style={{ padding: 16 }}>
         {detailId ? (
-          <DayDetail id={detailId} onBack={goBackDay} />
+          <DayDetail id={detailId} onBack={() => setDetailId(null)} />
         ) : specialId ? (
-          <SpecialDetail id={specialId} onBack={goBackSpecial} />
+          <SpecialDetail id={specialId} onBack={() => setSpecialId(null)} />
         ) : infoId ? (
-          <InfosPratiquesMarkdownPage id={infoId} onBack={goBackInfo} />
+          <InfosPratiquesMarkdownPage
+            id={infoId}
+            onBack={() => setInfoId(null)}
+          />
         ) : tab === "today" ? (
           <Today onOpenDetail={(id) => openDetail("today", id)} />
         ) : tab === "all" ? (
@@ -361,81 +220,42 @@ export default function App() {
    ========================= */
 
 const styles: Record<string, React.CSSProperties> = {
-  bannerWrap: {
-    height: 220,
-    overflow: "hidden",
-    borderBottom: "1px solid var(--border)",
-  },
-  bannerImg: {
-    width: "100%",
-    height: "100%",
-    objectFit: "cover",
-    objectPosition: "center 20%",
-    display: "block",
-  },
-
   topBar: {
     display: "flex",
-    alignItems: "center",
     justifyContent: "space-between",
     padding: "10px 16px",
-    position: "sticky",
-    top: 0,
-    zIndex: 10,
-    background: "rgba(0,0,0,0.20)",
-    backdropFilter: "blur(10px)",
-    borderBottom: "1px solid var(--border)",
+    background: "rgba(0,0,0,0.25)",
+    color: "white",
   },
   topTitle: {
-    color: "white",
     fontWeight: 900,
     fontSize: 18,
-    letterSpacing: 0.2,
   },
   burgerBtn: {
-    border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.06)",
-    color: "white",
-    borderRadius: 12,
-    padding: "8px 12px",
-    cursor: "pointer",
-    fontWeight: 900,
     fontSize: 18,
-    lineHeight: 1,
+    fontWeight: 900,
   },
-
   overlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(0,0,0,0.45)",
-    zIndex: 50,
+    background: "rgba(0,0,0,0.4)",
     display: "flex",
     justifyContent: "flex-end",
   },
   drawer: {
-    width: 290,
-    height: "100%",
+    width: 280,
     background: "var(--card)",
-    borderLeft: "1px solid var(--border)",
     padding: 16,
-    boxShadow: "var(--shadow)",
-    color: "var(--text)",
-    overflowY: "auto",
   },
   menuItem: {
     width: "100%",
-    textAlign: "left",
-    border: "1px solid var(--border)",
-    background: "rgba(255,255,255,0.06)",
-    color: "var(--text)",
-    borderRadius: 14,
-    padding: "10px 12px",
-    cursor: "pointer",
-    fontWeight: 800,
     marginBottom: 10,
   },
-  menuActive: {
-    background: "var(--accentSoft)",
-    borderColor: "var(--accentBorder)",
+  select: {
+    width: "100%",
+    marginTop: 8,
+    padding: "10px 12px",
+    borderRadius: 12,
+    fontWeight: 700,
   },
 };

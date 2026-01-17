@@ -41,5 +41,36 @@ body {
 }
 
 #root {
-  zoom: var(--ui-scale);
+  min-height: 100vh;
+}
+
+/* === Texte Markdown : Réflexion / Résolution / Paroisse === */
+
+.bodyText {
+  line-height: 1.8;
+}
+
+.bodyText p {
+  line-height: 1.8;
+  margin: 0 0 1em 0;
+}
+
+.bodyText ul,
+.bodyText ol {
+  margin: 0 0 1em 1.2em;
+}
+
+.bodyText li {
+  line-height: 1.8;
+  margin-bottom: 0.5em;
+}
+
+.bodyText p:last-child,
+.bodyText li:last-child {
+  margin-bottom: 0;
+}
+
+/* === Zoom UI UNIQUEMENT sur le contenu === */
+.uiScale {
+  zoom: var(--ui-scale, 1);
 }

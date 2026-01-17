@@ -39,3 +39,7 @@
 body {
   font-size: calc(16px * var(--font-scale));
 }
+
+#root {
+  zoom: var(--ui-scale);
+}

@@ -51,9 +51,10 @@ function applyFontSize(size: FontSize) {
   const scale =
     size === "small" ? 0.9 : size === "large" ? 1.15 : size === "xlarge" ? 1.3 : 1;
 
-  document.documentElement.style.setProperty("--font-scale", String(scale));
+  document.documentElement.style.setProperty("--ui-scale", String(scale));
   localStorage.setItem("fontSize", size);
 }
+
 
 /* =========================
    App

@@ -31,3 +31,11 @@
 .bodyText li:last-child {
   margin-bottom: 0;
 }
+
+:root {
+  --font-scale: 1;
+}
+
+body {
+  font-size: calc(16px * var(--font-scale));
+}

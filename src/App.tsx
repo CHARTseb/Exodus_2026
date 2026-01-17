@@ -18,6 +18,7 @@ import "./App.css";
 
 type Tab = "today" | "all" | "notebook" | "special" | "infos";
 type ThemeMode = "auto" | "dark" | "light";
+type FontSize = "small" | "normal" | "large" | "xlarge";
 
 /* =========================
    Thème
@@ -33,6 +34,25 @@ function applyTheme(mode: ThemeMode) {
   if (mode === "auto") root.removeAttribute("data-theme");
   else root.setAttribute("data-theme", mode);
   localStorage.setItem("theme", mode);
+}
+
+/* =========================
+   Taille du texte
+   ========================= */
+
+function getSavedFontSize(): FontSize {
+  const v = localStorage.getItem("fontSize");
+  return v === "small" || v === "normal" || v === "large" || v === "xlarge"
+    ? v
+    : "normal";
+}
+
+function applyFontSize(size: FontSize) {
+  const scale =
+    size === "small" ? 0.9 : size === "large" ? 1.15 : size === "xlarge" ? 1.3 : 1;
+
+  document.documentElement.style.setProperty("--font-scale", String(scale));
+  localStorage.setItem("fontSize", size);
 }
 
 /* =========================
@@ -60,9 +80,18 @@ export default function App() {
     typeof window === "undefined" ? "auto" : getSavedTheme()
   );
 
+  // Taille texte
+  const [fontSize, setFontSize] = useState<FontSize>(() =>
+    typeof window === "undefined" ? "normal" : getSavedFontSize()
+  );
+
   useEffect(() => {
     applyTheme(theme);
   }, [theme]);
+
+  useEffect(() => {
+    applyFontSize(fontSize);
+  }, [fontSize]);
 
   /* =========================
      Navigation helpers
@@ -263,6 +292,34 @@ export default function App() {
                   onClick={() => setTheme(m)}
                 >
                   {m === "auto" ? "Auto" : m === "dark" ? "Sombre" : "Clair"}
+                </button>
+              ))}
+            </div>
+
+            {/* Taille du texte */}
+            <div style={{ marginTop: 14, fontWeight: 900, opacity: 0.9 }}>
+              Taille du texte
+            </div>
+
+            <div style={{ display: "flex", gap: 6, marginTop: 10 }}>
+              {([
+                { id: "small", label: "Petit" },
+                { id: "normal", label: "Normal" },
+                { id: "large", label: "Grand" },
+                { id: "xlarge", label: "Très grand" },
+              ] as { id: FontSize; label: string }[]).map((opt) => (
+                <button
+                  key={opt.id}
+                  style={{
+                    ...styles.menuItem,
+                    marginBottom: 0,
+                    flex: 1,
+                    textAlign: "center",
+                    ...(fontSize === opt.id ? styles.menuActive : {}),
+                  }}
+                  onClick={() => setFontSize(opt.id)}
+                >
+                  {opt.label}
                 </button>
               ))}
             </div>

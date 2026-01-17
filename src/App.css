@@ -2,22 +2,31 @@
   min-height: 100vh;
 }
 
-/* Blocs de texte méditatif */
+/* === Texte Markdown : Réflexion / Résolution / Paroisse === */
+
+/* Le wrapper */
 .bodyText {
-  line-height: 1.75;
+  line-height: 1.8;
 }
 
 /* Paragraphes Markdown */
 .bodyText p {
-  margin: 0 0 0.9em 0;
+  line-height: 1.8;
+  margin: 0 0 1em 0;
 }
 
-/* Listes (souvent plus serrées par défaut) */
+/* Listes */
+.bodyText ul,
+.bodyText ol {
+  margin: 0 0 1em 1.2em;
+}
+
 .bodyText li {
-  line-height: 1.7;
-  margin-bottom: 0.4em;
+  line-height: 1.8;
+  margin-bottom: 0.5em;
 }
 
+/* Dernier élément sans marge basse */
 .bodyText p:last-child,
 .bodyText li:last-child {
   margin-bottom: 0;

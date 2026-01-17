@@ -2,15 +2,23 @@
   min-height: 100vh;
 }
 
-/* Texte des blocs Markdown (Réflexion / Résolution / Paroisse) */
+/* Blocs de texte méditatif */
 .bodyText {
-  line-height: 1.65;
+  line-height: 1.75;
 }
 
+/* Paragraphes Markdown */
 .bodyText p {
-  margin: 0 0 0.75em 0;
+  margin: 0 0 0.9em 0;
 }
 
-.bodyText p:last-child {
+/* Listes (souvent plus serrées par défaut) */
+.bodyText li {
+  line-height: 1.7;
+  margin-bottom: 0.4em;
+}
+
+.bodyText p:last-child,
+.bodyText li:last-child {
   margin-bottom: 0;
 }

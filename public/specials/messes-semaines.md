@@ -60,7 +60,6 @@ Pensez à vérifier les informations auprès de la paroisse si nécessaire.
 📍 [Église du Sacré-Cœur – Marcq-en-Barœul](https://www.google.com/maps/search/?api=1&query=Église+du+Sacré-Cœur+Marcq-en-Barœul)
 
 - Mardi → vendredi : 08h00
-
 ---
 
 ### Église Saint-Vincent
